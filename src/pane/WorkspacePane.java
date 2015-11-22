@@ -54,5 +54,7 @@ public class WorkspacePane extends StackPane{
     public StackPane getViewerPane() {
         return viewerPane;
     }
-    
+    public PagePane getSelectedTab(){
+        return (PagePane)tabPane.getSelectionModel().getSelectedItem();
+    }
 }

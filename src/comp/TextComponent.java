@@ -10,6 +10,7 @@ import java.util.Optional;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.WeakChangeListener;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -22,6 +23,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputControl;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -49,11 +51,11 @@ public class TextComponent extends Component {
 
     private GridPane dialogPane;
     private ChoiceBox<String> tag;
-    private StackPane centerPane;
+    private VBox centerPane;
     private TextArea textBox;
     private ChoiceBox<String> fontFamilyBox;
     private TextField fontSizeField;
-    private VBox lists;
+    private ObservableList<ListPane> lists;
     private Button addListBt;
     
     private GridPane clonePane;
@@ -66,15 +68,13 @@ public class TextComponent extends Component {
         dialogPane = new GridPane();
         tag.getItems().addAll(H1, H2, H3, H4, H5, H6, P, OL, UL);
         textBox = new TextArea();
-        centerPane = new StackPane();
+        centerPane = new VBox();
         centerPane.getChildren().add(textBox);
-        lists = new VBox();
+        lists = FXCollections.observableArrayList();
         addListBt = new Button("Add list");
         addListBt.setOnAction(e -> {
             new ListPane();
         });
-        lists.getChildren().add(addListBt);
-
         PropertiesManager props = PropertiesManager.getPropertiesManager();
         fontFamilyBox = new ChoiceBox();
         ArrayList<String> fontFamilyList = props.getPropertyOptionsList(FONT_FAMILY_LIST);
@@ -90,7 +90,9 @@ public class TextComponent extends Component {
         dialogPane.add(fontFamilyBox, 0, 2);
         dialogPane.add(new Label("Input font size in px:"), 0, 3);
         dialogPane.add(fontSizeField, 1, 3);
-        dialogPane.add(centerPane, 0, 4);
+        dialogPane.add(addListBt, 0, 4);
+        addListBt.setVisible(false);
+        dialogPane.add(centerPane, 0, 5);
 
         tag.getSelectionModel().selectFirst();
         ChangeListener<String> changeListener = new ChangeListener<String>() {
@@ -98,9 +100,10 @@ public class TextComponent extends Component {
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 centerPane.getChildren().clear();
                 if (newValue.equals(OL) || newValue.equals(UL)) {
-                    centerPane.getChildren().add(lists);
+                    addListBt.setVisible(true);
+                    centerPane.getChildren().addAll(lists);
                 } else {
-                    centerPane.getChildren().add(textBox);
+                    centerPane.getChildren().addAll(textBox);
                 }
             }
         };
@@ -110,7 +113,7 @@ public class TextComponent extends Component {
     }
     @Override
     public boolean showDialog(){        
-        Boolean boo=false;
+        boolean boo=false;
         saveData();
         Dialog<ButtonType> dialog=new Dialog<>();
         dialog.setTitle("Text Edit Dialog");
@@ -139,14 +142,12 @@ public class TextComponent extends Component {
             n.setDisable(true);
         }
         centerPane.setDisable(false);
-        textBox.setEditable(false);
-        ObservableList<Node> children2=lists.getChildren();
-        children2.get(0).setDisable(true);
-        for(int i=1;i<children2.size();i++){
-            ListPane lp=(ListPane)children2.get(i);
-            TextField tf=(TextField)lp.getChildren().get(0);
-            tf.setEditable(false);
-            lp.getChildren().get(1).setDisable(true);
+        ObservableList<Node> children2=centerPane.getChildren();
+        for(Node n: children2){
+            if(n instanceof ListPane){
+            ((TextInputControl)((ListPane)n).getChildren().get(0)).setEditable(false);
+            }
+            else ((TextInputControl)n).setEditable(false);
         }
         dialogPane.setStyle("-fx-opacity: 1");             
     }
@@ -155,16 +156,15 @@ public class TextComponent extends Component {
         for(Node n: children){
             n.setDisable(false);
         }
-        centerPane.setDisable(false);
-        textBox.setEditable(true);
-        ObservableList<Node> children2=lists.getChildren();
-        children2.get(0).setDisable(false);
-        for(int i=1;i<children2.size();i++){
-            ListPane lp=(ListPane)children2.get(i);
-            TextField tf=(TextField)lp.getChildren().get(0);
-            tf.setEditable(true);
-            lp.getChildren().get(1).setDisable(false);
-        }   
+
+        ObservableList<Node> children2=centerPane.getChildren();
+        for(Node n: children2){
+            if(n instanceof ListPane){
+            ((TextInputControl)((ListPane)n).getChildren().get(0)).setEditable(true);
+            }
+            else ((TextInputControl)n).setEditable(true);
+        }
+        dialogPane.setStyle("-fx-opacity: 1");
     }
     public void saveData(){
         
@@ -184,11 +184,11 @@ public class TextComponent extends Component {
         }
 
         public final void initListPane() {
-            lists.getChildren().add(this);
+            lists.add(this);
             content = new TextField();
             delete = new Button();
             delete.setOnAction(e -> {
-                lists.getChildren().remove(this);
+                lists.remove(this);
             });
             this.getChildren().addAll(content, delete);
         }

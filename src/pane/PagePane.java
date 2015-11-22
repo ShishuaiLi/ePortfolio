@@ -17,6 +17,7 @@ public class PagePane extends Tab{
     private VBox bodyPane;
     private LayoutPane layoutPane;
     private VBox contentPane;
+    private ComponentPane selectedComp;
 
     public LayoutPane getLayoutPane() {
         return layoutPane;
@@ -39,4 +40,13 @@ public class PagePane extends Tab{
         scroll.setContent(bodyPane);
         this.setContent(scroll);
     }
+
+    public ComponentPane getSelectedComp() {
+        return selectedComp;
+    }
+
+    public void setSelectedComp(ComponentPane selectedComp) {
+        this.selectedComp = selectedComp;
+    }
+    
 }

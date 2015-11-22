@@ -6,6 +6,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
@@ -45,7 +46,7 @@ public class SlideShowMaker {
     // POINT, RUNNING THE UI AND EVERYTHING ELSE
     SlideShowMakerView ui = new SlideShowMakerView(fileManager);
 
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Parent primaryStage){
 
         // LOAD APP SETTINGS INTO THE GUI AND START IT UP
         boolean success = loadProperties();
@@ -59,8 +60,16 @@ public class SlideShowMaker {
 	else {
 	    // LET THE ERROR HANDLER PROVIDE THE RESPONSE
 	    ErrorHandler errorHandler = ui.getErrorHandler();
-	    System.exit(0);
+
 	}
+    }
+
+    public SlideShowFileManager getFileManager() {
+        return fileManager;
+    }
+
+    public SlideShowMakerView getUi() {
+        return ui;
     }
     
     /**

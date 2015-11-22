@@ -61,6 +61,7 @@ public class SideBarPane extends VBox{
         addSlideshow.setOnAction(e->addSlideshowHandler());
         addVideo.setOnAction(e->addVideoHandler());
         addLink.setOnAction(e->addLinkHandler());
+        remove.setOnAction(e->removeHandler());
     }
     private void addPageHandler(){
         PagePane page=new PagePane();
@@ -92,69 +93,74 @@ public class SideBarPane extends VBox{
         }
     }
     public void addTextHandler(){
-        TabPane tabPane=workspace.getTabPane();
-        PagePane currentPage=(PagePane)tabPane.getSelectionModel().getSelectedItem();
+        PagePane currentPage=workspace.getSelectedTab();
         VBox contentPane=currentPage.getContentPane();
         ComponentPane compPane=new ComponentPane(TEXT);
-        Boolean boo=compPane.showDialog();
+        boolean boo=compPane.showDialog();
         if(boo){
             contentPane.getChildren().add(compPane);
+            compPane.setSelectedComp(currentPage);
         }
     }
     
     
     
     public void editHandler(){
-        TabPane tabPane=workspace.getTabPane();
-        PagePane currentPage=(PagePane)tabPane.getSelectionModel().getSelectedItem();
-        VBox contentPane=currentPage.getContentPane();
-        ObservableList<Node> comps=contentPane.getChildren();
-        for(Node n: comps){
-            if(n.isFocused()){
-                ((ComponentPane)n).showDialog();               
-                break;
-            }
-        }
+        PagePane currentPage=workspace.getSelectedTab();          
+        currentPage.getSelectedComp().showDialog();               
         
     }
     public void setWorkspacePane(WorkspacePane workspace){
         this.workspace=workspace;
     }
 
-    private void addImageHandler() {
-        TabPane tabPane=workspace.getTabPane();
-        PagePane currentPage=(PagePane)tabPane.getSelectionModel().getSelectedItem();
+    public void addImageHandler() {
+        PagePane currentPage=workspace.getSelectedTab();
         VBox contentPane=currentPage.getContentPane();
         ComponentPane compPane=new ComponentPane(IMAGE);
-        Boolean boo=compPane.showDialog();
+        boolean boo=compPane.showDialog();
         if(boo){
             contentPane.getChildren().add(compPane);
+            compPane.setSelectedComp(currentPage);
         }
     }
 
-    private void addSlideshowHandler() {
-        TabPane tabPane=workspace.getTabPane();
-        PagePane currentPage=(PagePane)tabPane.getSelectionModel().getSelectedItem();
+    public void addSlideshowHandler() {
+        PagePane currentPage=workspace.getSelectedTab();
         VBox contentPane=currentPage.getContentPane();
         ComponentPane compPane=new ComponentPane(SLIDESHOW);
-        Boolean boo=compPane.showDialog();
+        boolean boo=compPane.showDialog();
         if(boo){
             contentPane.getChildren().add(compPane);
+            compPane.setSelectedComp(currentPage);
         }
     }
 
-    private void addVideoHandler() {
-        TabPane tabPane=workspace.getTabPane();
-        PagePane currentPage=(PagePane)tabPane.getSelectionModel().getSelectedItem();
+    public void addVideoHandler() {
+        PagePane currentPage=workspace.getSelectedTab();
         VBox contentPane=currentPage.getContentPane();
         ComponentPane compPane=new ComponentPane(VIDEO);
-        Boolean boo=compPane.showDialog();
+        boolean boo=compPane.showDialog();
         if(boo){
             contentPane.getChildren().add(compPane);
+            compPane.setSelectedComp(currentPage);
         }
     }
 
-    private void addLinkHandler() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void addLinkHandler() {
+        PagePane currentPage=workspace.getSelectedTab();
+        currentPage.getSelectedComp();        
     }
+    public void removeHandler(){
+        PagePane currentPage=workspace.getSelectedTab();
+        VBox contentPane=currentPage.getContentPane();
+        ObservableList<Node> comps=contentPane.getChildren();
+        for(Node n: comps){
+            if(n.isFocused()){
+                comps.remove(n);               
+                break;
+            }
+        }
+    }
+    
 }

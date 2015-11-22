@@ -86,7 +86,7 @@ public class VideoComponent extends Component{
 
     @Override
     public boolean showDialog() {
-        Boolean boo=false;
+        boolean boo=false;
         saveData();
         Dialog<ButtonType> dialog=new Dialog<>();
         dialog.setTitle("Video Edit Dialog");

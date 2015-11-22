@@ -7,6 +7,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.ImageCursor;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -17,9 +18,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
@@ -50,7 +53,7 @@ import ssm.file.SlideShowFileManager;
 public class SlideShowMakerView {
 
     // THIS IS THE MAIN APPLICATION UI WINDOW AND ITS SCENE GRAPH
-    Stage primaryStage;
+    Parent primaryStage;
     Scene primaryScene;
 
     // THIS PANE ORGANIZES THE BIG PICTURE CONTAINERS FOR THE
@@ -62,8 +65,7 @@ public class SlideShowMakerView {
     Button newSlideShowButton;
     Button loadSlideShowButton;
     Button saveSlideShowButton;
-    Button viewSlideShowButton;
-    Button exitButton;
+
     
     // WORKSPACE
     HBox workspace;
@@ -93,6 +95,8 @@ public class SlideShowMakerView {
     
     // THIS CONTROLLER RESPONDS TO SLIDE SHOW EDIT BUTTONS
     private SlideShowEditController editController;
+    private TextField widthField;
+    private TextField heightField;
 
     /**
      * Default constructor, it initializes the GUI for use, but does not yet
@@ -115,7 +119,7 @@ public class SlideShowMakerView {
 	return slideShow;
     }
 
-    public Stage getWindow() {
+    public Parent getWindow() {
 	return primaryStage;
     }
 
@@ -130,7 +134,7 @@ public class SlideShowMakerView {
      * 
      * @param windowTitle The title for this window.
      */
-    public void startUI(Stage initPrimaryStage, String windowTitle) {
+    public void startUI(Parent initPrimaryStage, String windowTitle) {
 	// THE TOOLBAR ALONG THE NORTH
 	initFileToolbar();
 
@@ -179,13 +183,14 @@ public class SlideShowMakerView {
      * This class will reset the title pane and add it on SlidesEditorPane.
      */
     private void initTitlePane(){
-        HBox titlePane=new HBox();
+        GridPane titlePane=new GridPane();
         titlePane.setPadding(new Insets(10,10,10,10));
-        titlePane.setSpacing(10);
-        titlePane.setAlignment(Pos.CENTER);
+
         Label titleLabel=new Label(PropertiesManager.getPropertiesManager().getProperty("LABEL_TITLE"));
         titleLabel.getStyleClass().add(CSS_CLASS_LABEL_TEXT);
         TextField titleField=new TextField();
+        widthField=new TextField();
+        heightField=new TextField();
         titleField.setPromptText(PropertiesManager.getPropertiesManager().getProperty("DEFAULT_SLIDE_SHOW_TITLE"));
         titleField.setText(slideShow.getTitle());
         titleField.focusedProperty().addListener(new InvalidationListener() {
@@ -202,8 +207,18 @@ public class SlideShowMakerView {
             
             slideShow.setTitle(titleField.getText());
         });
-        
-        titlePane.getChildren().addAll(titleLabel,titleField);
+        widthField.setOnAction(e->{
+            this.getFileController().markAsEdited();
+        });
+        heightField.setOnAction(e->{
+            this.getFileController().markAsEdited();
+        });
+        titlePane.add(titleLabel, 0,0);
+        titlePane.add(titleField, 1,0);
+        titlePane.add(new Label("Width:"), 0,1);
+        titlePane.add(widthField, 1,1);
+        titlePane.add(new Label("Height:"), 2,1);
+        titlePane.add(heightField, 3,1);
         getSlidesEditorPane().getChildren().add(titlePane);
     }
 
@@ -219,12 +234,7 @@ public class SlideShowMakerView {
 	saveSlideShowButton.setOnAction(e -> {
 	    getFileController().handleSaveSlideShowRequest();
 	});
-        viewSlideShowButton.setOnAction(e->{
-            new ViewSlideShow(this);
-        });
-	exitButton.setOnAction(e -> {
-	    getFileController().handleExitRequest();
-	});
+
 	
 	// THEN THE SLIDE SHOW EDIT CONTROLS
 	editController = new SlideShowEditController(this);
@@ -292,38 +302,37 @@ public class SlideShowMakerView {
 	newSlideShowButton = initChildButton(fileToolbarPane, ICON_NEW_SLIDE_SHOW,	TOOLTIP_NEW_SLIDE_SHOW,	    CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, false);
 	loadSlideShowButton = initChildButton(fileToolbarPane, ICON_LOAD_SLIDE_SHOW,	TOOLTIP_LOAD_SLIDE_SHOW,    CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, false);
 	saveSlideShowButton = initChildButton(fileToolbarPane, ICON_SAVE_SLIDE_SHOW,	TOOLTIP_SAVE_SLIDE_SHOW,    CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, true);
-	viewSlideShowButton = initChildButton(fileToolbarPane, ICON_VIEW_SLIDE_SHOW,	TOOLTIP_VIEW_SLIDE_SHOW,    CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, true);
-	exitButton = initChildButton(fileToolbarPane, ICON_EXIT, TOOLTIP_EXIT, CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, false);
     }
 
     private void initWindow(String windowTitle) {
 	// SET THE WINDOW TITLE
-	primaryStage.setTitle(windowTitle);
+
 
 	// GET THE SIZE OF THE SCREEN
 	Screen screen = Screen.getPrimary();
 	Rectangle2D bounds = screen.getVisualBounds();
 
 	// AND USE IT TO SIZE THE WINDOW
-        primaryStage.setWidth((bounds.getWidth())*0.75);
-	primaryStage.setHeight((bounds.getHeight())*0.75);
-	primaryStage.setX((bounds.getWidth())*0.25/2);
-	primaryStage.setY((bounds.getHeight())*0.25/2);
+        ((Stage)primaryStage.getScene().getWindow()).setWidth((bounds.getWidth())*0.75);
+	((Stage)primaryStage.getScene().getWindow()).setHeight((bounds.getHeight())*0.75);
+	((Stage)primaryStage.getScene().getWindow()).setX((bounds.getWidth())*0.25/2);
+	((Stage)primaryStage.getScene().getWindow()).setY((bounds.getHeight())*0.25/2);
 	
 
         // SETUP THE UI, NOTE WE'LL ADD THE WORKSPACE LATER
 	ssmPane = new BorderPane();
         ssmPane.getStyleClass().add(CSS_CLASS_BACKGROUND);
-	ssmPane.setTop(fileToolbarPane);	
-	primaryScene = new Scene(ssmPane);
+	ssmPane.setTop(fileToolbarPane);
+        ((StackPane)primaryStage).getChildren().add(ssmPane);
+
 	Image image = new Image("file:"+PATH_ICONS+"lol.png");
-        primaryScene.setCursor(new ImageCursor(image));
+        primaryStage.getScene().setCursor(new ImageCursor(image));
         // NOW TIE THE SCENE TO THE WINDOW, SELECT THE STYLESHEET
 	// WE'LL USE TO STYLIZE OUR GUI CONTROLS, AND OPEN THE WINDOW
-	primaryScene.getStylesheets().add("file:"+STYLE_SHEET_UI);
-	primaryStage.setScene(primaryScene);
-        primaryStage.getIcons().add(new Image("file:"+PATH_ICONS+PropertiesManager.getPropertiesManager().getProperty("WINDOW_ICON_NAME")));
-	primaryStage.show();
+	primaryStage.getScene().getStylesheets().add("file:"+STYLE_SHEET_UI);
+
+        ((Stage)primaryStage.getScene().getWindow()).getIcons().add(new Image("file:"+PATH_ICONS+PropertiesManager.getPropertiesManager().getProperty("WINDOW_ICON_NAME")));
+
     }
     
     /**
@@ -378,7 +387,6 @@ public class SlideShowMakerView {
 	
 	// NEXT ENABLE/DISABLE BUTTONS AS NEEDED IN THE FILE TOOLBAR
 	saveSlideShowButton.setDisable(saved);
-	viewSlideShowButton.setDisable(false);
 	
 	// AND THE SLIDESHOW EDIT TOOLBAR
 	addSlideButton.setDisable(false);
@@ -448,6 +456,27 @@ public class SlideShowMakerView {
     public BorderPane getSsmPane() {
         return ssmPane;
     }
+
+    public Button getSaveSlideShowButton() {
+        return saveSlideShowButton;
+    }
+
+    public TextField getWidthField() {
+        return widthField;
+    }
+
+    public void setWidthField(TextField widthField) {
+        this.widthField = widthField;
+    }
+
+    public TextField getHeightField() {
+        return heightField;
+    }
+
+    public void setHeightField(TextField heightField) {
+        this.heightField = heightField;
+    }
+    
 
     
 }

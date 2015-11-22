@@ -32,11 +32,12 @@ import static ssm.StartupConstants.DEFAULT_THUMBNAIL_WIDTH;
 import static ssm.StartupConstants.ICON_NEW_SLIDE_SHOW;
 import static ssm.StartupConstants.ICON_NEXT;
 import static ssm.StartupConstants.ICON_PREVIOUS;
+import static ssm.StartupConstants.PATH_SLIDE_SHOWS;
 import ssm.model.SlideShowModel;
 import ssm.error.ErrorHandler;
 import ssm.file.SlideShowFileManager;
+import static ssm.file.SlideShowFileManager.JSON_EXT;
 import ssm.view.SlideShowMakerView;
-import static ssm.StartupConstants.PATH_SLIDE_SHOWS;
 import static ssm.file.SlideShowFileManager.SLASH;
 import ssm.model.Slide;
 import ssm.view.SlideEditView;
@@ -117,6 +118,24 @@ public class FileController {
      * This method lets the user open a slideshow saved to a file. It will also
      * make sure data for the current slideshow is not lost.
      */
+    public boolean handleLoadSlideShowRequest(String slideShowTitle) {
+        boolean boo=false;
+        try {
+            String jsonFilePath = PATH_SLIDE_SHOWS + slideShowTitle + JSON_EXT;
+            File selectedFile = new File(jsonFilePath);
+		SlideShowModel slideShowToLoad = ui.getSlideShow();
+                slideShowIO.loadSlideShow(slideShowToLoad, selectedFile.getAbsolutePath());
+                ui.reloadSlideShowPane(slideShowToLoad);
+                saved = true;
+                ui.updateToolbarControls(saved);
+                boo=true;
+            } catch (Exception e) {
+                ErrorHandler eH = ui.getErrorHandler();
+                // @todo
+                eH.processError(LanguagePropertyType.ERROR_DATA_FILE_LOADING,LanguagePropertyType.ERROR_DATA_FILE_LOADING_TITLE , e.toString());
+            }
+        return boo;
+    }
     public void handleLoadSlideShowRequest() {
         try {
             // WE MAY HAVE TO SAVE CURRENT WORK
@@ -239,7 +258,7 @@ public class FileController {
         // AND NOW ASK THE USER FOR THE COURSE TO OPEN
         FileChooser slideShowFileChooser = new FileChooser();
         slideShowFileChooser.setInitialDirectory(new File(PATH_SLIDE_SHOWS));
-        File selectedFile = slideShowFileChooser.showOpenDialog(ui.getWindow());
+        File selectedFile = slideShowFileChooser.showOpenDialog(ui.getWindow().getScene().getWindow());
 
         // ONLY OPEN A NEW FILE IF THE USER SAYS OK
         if (selectedFile != null) {

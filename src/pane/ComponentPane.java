@@ -8,7 +8,9 @@ package pane;
 import comp.Component;
 import comp.Component.ComponentType;
 import comp.ImageComponent;
+import comp.SlideshowComponent;
 import comp.TextComponent;
+import comp.VideoComponent;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
@@ -40,8 +42,20 @@ public class ComponentPane extends StackPane{
             case SLIDESHOW:
                 comp=new SlideshowComponent();
                 break;
-        }
+        }        
         
+    }
+    public void setSelectedComp(PagePane selectedTab){
+        this.setOnMouseClicked(e->{
+            ComponentPane selected=selectedTab.getSelectedComp();
+                if(selected!=null){
+                    //selected.getStyleClass().remove(1);
+                }
+                selectedTab.setSelectedComp(this);
+                //this.getStyleClass().add(CSS_CLASS_SLIDE_SELECTED_VIEW);
+                // update sidebar control
+                //ui.updateSideBarControls(false);
+            });
     }
     public boolean showDialog(){
         boolean boo= comp.showDialog();
