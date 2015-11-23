@@ -18,7 +18,12 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputControl;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import static util.Constants.*;
 import util.Utility;
@@ -100,6 +105,7 @@ public class SideBarPane extends VBox{
         if(boo){
             contentPane.getChildren().add(compPane);
             compPane.setSelectedComp(currentPage);
+            ((TextComponent)compPane.getComp()).setControls(this);
         }
     }
     
@@ -149,7 +155,25 @@ public class SideBarPane extends VBox{
 
     public void addLinkHandler() {
         PagePane currentPage=workspace.getSelectedTab();
-        currentPage.getSelectedComp();        
+        TextInputControl input=((TextComponent)currentPage.getSelectedComp().getComp()).getHLNode();
+        GridPane dialogPane=new GridPane();
+        Label textLb=new Label("Text: "+input.getSelectedText());
+        TextField sourceTf=new TextField();
+        Dialog<ButtonType> dialog=new Dialog<>();
+        dialog.setTitle("Add HyperLink Dialog");
+        dialogPane.add(textLb, 0, 0);
+        dialogPane.add(new Label("href:"), 0, 1);
+        dialogPane.add(sourceTf, 1, 1);
+        dialog.getDialogPane().setContent(dialogPane);
+        ButtonType okBt = ButtonType.OK;
+        ButtonType cancelBt = ButtonType.CANCEL;
+        dialog.getDialogPane().getButtonTypes().addAll(okBt,cancelBt);
+        Optional<ButtonType> result = dialog.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+                 input.replaceSelection("<a href=\""+sourceTf.getText()+
+                         "\">"+input.getSelectedText()+"</a>");
+        }
+        
     }
     public void removeHandler(){
         PagePane currentPage=workspace.getSelectedTab();
@@ -161,6 +185,10 @@ public class SideBarPane extends VBox{
                 break;
             }
         }
+    }
+    
+    public void setAddLinkDisable(boolean bo){
+        addLink.setDisable(bo);
     }
     
 }

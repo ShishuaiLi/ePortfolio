@@ -7,6 +7,9 @@ package comp;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.beans.WeakInvalidationListener;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.WeakChangeListener;
@@ -20,6 +23,7 @@ import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -29,6 +33,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import pane.SideBarPane;
 import properties_manager.PropertiesManager;
 import static util.PropertyEnum.FONT_FAMILY_LIST;
 
@@ -59,6 +64,9 @@ public class TextComponent extends Component {
     private Button addListBt;
     
     private GridPane clonePane;
+    
+    private TextInputControl HLNode;
+    private SideBarPane controls;
 
     public TextComponent() {
         initTextComponent();
@@ -70,6 +78,7 @@ public class TextComponent extends Component {
         textBox = new TextArea();
         centerPane = new VBox();
         centerPane.getChildren().add(textBox);
+        
         lists = FXCollections.observableArrayList();
         addListBt = new Button("Add list");
         addListBt.setOnAction(e -> {
@@ -109,7 +118,20 @@ public class TextComponent extends Component {
         };
         tag.valueProperty().addListener(new WeakChangeListener<String>(changeListener));
         
-        
+        textBox.selectionProperty().addListener(new WeakChangeListener<IndexRange>
+        (new ChangeListener<IndexRange>(){
+            @Override
+            public void changed(ObservableValue<? extends IndexRange> observable,
+                    IndexRange oldValue, IndexRange newValue){
+                if(newValue.getLength()!=0){
+                    controls.setAddLinkDisable(false);
+                    HLNode=textBox;
+                }
+                else{
+                    controls.setAddLinkDisable(true);
+                }
+            }
+        }));
     }
     @Override
     public boolean showDialog(){        
@@ -174,6 +196,15 @@ public class TextComponent extends Component {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    public void setControls(SideBarPane controls) {
+        this.controls = controls;
+    }
+
+    public TextInputControl getHLNode() {
+        return HLNode;
+    }
+    
+
     class ListPane extends HBox {
 
         private TextField content;
@@ -191,6 +222,20 @@ public class TextComponent extends Component {
                 lists.remove(this);
             });
             this.getChildren().addAll(content, delete);
+            content.selectionProperty().addListener(new WeakChangeListener<IndexRange>
+        (new ChangeListener<IndexRange>(){
+            @Override
+            public void changed(ObservableValue<? extends IndexRange> observable,
+                    IndexRange oldValue, IndexRange newValue){
+                if(newValue.getLength()!=0){
+                    controls.setAddLinkDisable(false);
+                    HLNode=content;
+                }
+                else{
+                    controls.setAddLinkDisable(true);
+                }
+            }
+        }));
         }
 
     }
