@@ -15,6 +15,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import model.PortModel;
+import static util.Constants.CSS_CLASS_SLIDE_SELECTED_VIEW;
 
 /**
  *
@@ -23,11 +25,12 @@ import javafx.stage.Stage;
 public class ComponentPane extends StackPane{
     private ComponentType compType;
     private Component comp;
+    private PortModel model;
 
     public ComponentPane(){
         
     }
-    public ComponentPane(ComponentType compType){
+    public ComponentPane(ComponentType compType,PortModel model){
         this.compType=compType;
         switch(compType){
             case TEXT:
@@ -42,23 +45,26 @@ public class ComponentPane extends StackPane{
             case SLIDESHOW:
                 comp=new SlideshowComponent();
                 break;
-        }        
+        }
+        this.model=model;
         
     }
     public void setSelectedComp(PagePane selectedTab){
         this.setOnMouseClicked(e->{
             ComponentPane selected=selectedTab.getSelectedComp();
                 if(selected!=null){
-                    //selected.getStyleClass().remove(1);
+                    selected.getStyleClass().remove(CSS_CLASS_SLIDE_SELECTED_VIEW);
                 }
                 selectedTab.setSelectedComp(this);
-                //this.getStyleClass().add(CSS_CLASS_SLIDE_SELECTED_VIEW);
+                this.getStyleClass().add(CSS_CLASS_SLIDE_SELECTED_VIEW);
+                
                 // update sidebar control
-                //ui.updateSideBarControls(false);
+                model.getPortfolioPane().getWorkspacePane().getSideBarPane().setBtDisable(false);
             });
     }
     public boolean showDialog(){
         boolean boo= comp.showDialog();
+        this.getChildren().clear();
         this.getChildren().add(comp.getDialogPane());
         return boo;
     }

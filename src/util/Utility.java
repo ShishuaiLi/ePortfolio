@@ -53,6 +53,7 @@ public class Utility {
 	}	    
 	else {
 	    // @todo provide error message for no files selected
+            return null;
 	}
     }
     

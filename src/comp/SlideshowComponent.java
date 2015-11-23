@@ -16,6 +16,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import ssm.SlideShowMaker;
 
 /**
@@ -25,10 +26,10 @@ import ssm.SlideShowMaker;
 public class SlideshowComponent extends Component{
     public static final String IFRAME = "iframe";
     
-    private GridPane dialogPane;
-    private TextField titleField;
-    private TextField widthField;
-    private TextField heightField;
+    private StackPane dialogPane;
+    private Label title;
+    private Label width;
+    private Label height;
     private GridPane showPane;
     
     private int slidesNum;
@@ -38,22 +39,21 @@ public class SlideshowComponent extends Component{
         initSlideshow();
     }
     public final void initSlideshow(){
-        dialogPane=new GridPane();
+        dialogPane=new StackPane();
         
-        titleField=new TextField();
-        widthField=new TextField();
-        heightField=new TextField();
+        title=new Label();
+        width=new Label();
+        height=new Label();
         showPane=new GridPane();
         showPane.add(new Label("Slideshow title:"), 0, 0);
-        showPane.add(titleField, 1, 0);
+        showPane.add(title, 1, 0);
         showPane.add(new Label("Slides number: "+slidesNum), 0, 1);
 
         showPane.add(new Label("Width:"), 0, 2);
-        showPane.add(widthField, 1, 2);
+        showPane.add(width, 1, 2);
         showPane.add(new Label("Height:"), 2, 2);
-        showPane.add(heightField, 3, 2);
-        showPane.setDisable(true);
-        showPane.setStyle("-fx-opacity: 1");
+        showPane.add(height, 3, 2);
+
     }
 
     @Override
@@ -66,8 +66,8 @@ public class SlideshowComponent extends Component{
         dialog.getDialogPane().setContent(dialogPane);        
         ssm=new SlideShowMaker();
         ssm.start(dialogPane);
-        if(titleField.getText()!=null&&!titleField.getText().equals("")){
-            boolean booo=ssm.getUi().getFileController().handleLoadSlideShowRequest(titleField.getText());
+        if(title.getText()!=null&&!title.getText().equals("")){
+            boolean booo=ssm.getUi().getFileController().handleLoadSlideShowRequest(title.getText());
             //throw exception when the JSon file does not exist anymore, load failed
             if(!booo){
                 
@@ -82,12 +82,13 @@ public class SlideshowComponent extends Component{
                         @Override
                         public void handle(ActionEvent e) {
                             ssm.getUi().getSaveSlideShowButton().fire();
-                            titleField.setText(ssm.getUi().getSlideShow().getTitle());
+                            title.setText(ssm.getUi().getSlideShow().getTitle());
                             slidesNum=ssm.getUi().getSlideShow().getSlides().size();
-                            widthField.setText(ssm.getUi().getWidthField().getText());
-                            heightField.setText(ssm.getUi().getHeightField().getText());
+                            width.setText(ssm.getUi().getWidthField().getText());
+                            height.setText(ssm.getUi().getHeightField().getText());
                         };
                     });
+        dialog.setResizable(true);
         Optional<ButtonType> result = dialog.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {            
             boo=true;                 

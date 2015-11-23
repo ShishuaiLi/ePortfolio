@@ -1,15 +1,6 @@
 package ssm;
 
-import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.stage.Stage;
 import xml_utilities.InvalidXMLFileFormatException;
 import properties_manager.PropertiesManager;
 import static ssm.LanguagePropertyType.TITLE_WINDOW;
@@ -19,15 +10,6 @@ import static ssm.StartupConstants.UI_PROPERTIES_FILE_NAME;
 import ssm.error.ErrorHandler;
 import ssm.file.SlideShowFileManager;
 import ssm.view.SlideShowMakerView;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
-import javafx.stage.Screen;
-import javafx.stage.WindowEvent;
-import static javax.swing.JOptionPane.ERROR_MESSAGE;
-import static ssm.StartupConstants.PATH_ICONS;
 
 
 /**

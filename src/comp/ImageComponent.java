@@ -10,6 +10,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
+import javafx.event.ActionEvent;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -20,6 +21,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
+import static util.Constants.CSS_CLASS_DISABLED;
+import static util.Constants.PATH_IMAGES;
 
 /**
  *
@@ -54,6 +57,21 @@ public class ImageComponent extends Component{
             selectImageDialog();
             updateSlideImage();
         });
+        widthField.setOnAction(e->{
+            
+            if(widthField.getText()!=null&&!widthField.getText().equals("")){
+            double width=Double.parseDouble(widthField.getText());            
+	    imageView.setFitWidth(width);
+            }	    
+        });
+        heightField.setOnAction(e->{
+            
+           if(heightField.getText()!=null&&!heightField.getText().equals("")){
+            double height=Double.parseDouble(heightField.getText());            
+	    imageView.setFitHeight(height);
+            }
+        });
+        
         
         dialogPane.add(new Label("Image path:"), 0, 0);
         dialogPane.add(imagePathTF, 1, 0);
@@ -82,7 +100,7 @@ public class ImageComponent extends Component{
             }
 	    if(heightField.getText()!=null&&!heightField.getText().equals("")){
             double height=Double.parseDouble(heightField.getText());            
-	    imageView.setFitWidth(height);
+	    imageView.setFitHeight(height);
             }
 	} catch (Exception e) {
 	    // @todo - use Error handler to respond to missing image
@@ -93,7 +111,7 @@ public class ImageComponent extends Component{
         FileChooser imageFileChooser = new FileChooser();
 	
 	// SET THE STARTING DIRECTORY
-	imageFileChooser.setInitialDirectory(new File(""));
+	imageFileChooser.setInitialDirectory(new File(PATH_IMAGES));
 	
 	// LET'S ONLY SEE IMAGE FILES
 	FileChooser.ExtensionFilter jpgFilter = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.JPG");
@@ -108,7 +126,8 @@ public class ImageComponent extends Component{
             Path filePath=file.toPath();
 	    String path = cwd.relativize(filePath.getParent()).toString();
 	    String fileName = file.getName();
-	    
+	    imagePathTF.setText(path+"\\"+fileName);
+
 	}	    
 	else {
 	    // @todo provide error message for no files selected
@@ -126,10 +145,13 @@ public class ImageComponent extends Component{
         ButtonType okBt = ButtonType.OK;
         ButtonType cancelBt = ButtonType.CANCEL;
         dialog.getDialogPane().getButtonTypes().addAll(okBt,cancelBt);
+        dialog.setResizable(true);
         Optional<ButtonType> result = dialog.showAndWait();
+        
         if (result.isPresent() && result.get() == ButtonType.OK) {
                  boo=true;
-                 
+                 widthField.fireEvent(new ActionEvent());
+                 heightField.fireEvent(new ActionEvent());
  }
         loadData();
         disableDialogPane();
@@ -142,20 +164,21 @@ public class ImageComponent extends Component{
     }
 
     public void saveData() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     public void enableDialogPane() {
         dialogPane.setDisable(false);
+        dialogPane.getStyleClass().remove(CSS_CLASS_DISABLED);
     }
 
     public void loadData() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     public void disableDialogPane() {
         dialogPane.setDisable(true);
-        dialogPane.setStyle("-fx-opacity: 1");
+        dialogPane.getStyleClass().add(CSS_CLASS_DISABLED);
     }
     
 }

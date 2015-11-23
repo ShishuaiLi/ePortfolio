@@ -8,6 +8,7 @@ package pane;
 
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
+import model.PortModel;
 
 import static util.Constants.*;
 import util.Utility;
@@ -17,6 +18,7 @@ import util.Utility;
  * @author Steve
  */
 public class FileToolBarPane extends HBox{
+    private PortModel model;
     private Button newFile;
     private Button loadFile;
     private Button saveFile;
@@ -25,6 +27,10 @@ public class FileToolBarPane extends HBox{
     private Button exit;
     
     public FileToolBarPane(){
+        initFileToolBarPane();
+    }
+    public FileToolBarPane(PortModel model){
+        this.model=model;
         initFileToolBarPane();
     }
     public final void initFileToolBarPane(){

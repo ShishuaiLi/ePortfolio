@@ -217,8 +217,8 @@ public class SlideShowMakerView {
         titlePane.add(titleField, 1,0);
         titlePane.add(new Label("Width:"), 0,1);
         titlePane.add(widthField, 1,1);
-        titlePane.add(new Label("Height:"), 2,1);
-        titlePane.add(heightField, 3,1);
+        titlePane.add(new Label("Height:"), 0,2);
+        titlePane.add(heightField, 1,2);
         getSlidesEditorPane().getChildren().add(titlePane);
     }
 

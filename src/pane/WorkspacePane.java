@@ -11,6 +11,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+import model.PortModel;
 
 /**
  *
@@ -19,23 +22,32 @@ import javafx.scene.layout.VBox;
 public class WorkspacePane extends StackPane{
     private BorderPane editorPane;
     private SideBarPane sideBarPane;
-    private TabPane tabPane;
-    
-    private StackPane viewerPane;
+    private TabPane tabPane;    
+    private WebView viewerPane;
+    private PortModel model;
 
     public WorkspacePane(){
-        
+        initWorkspace();
+    }
+    public WorkspacePane(PortModel model){
+        this.model=model;
+        initWorkspace();
     }
     
     public final void initWorkspace(){
         editorPane=new BorderPane();
-        sideBarPane=new SideBarPane();
+        sideBarPane=new SideBarPane(model);
         sideBarPane.setWorkspacePane(this);
         editorPane.setLeft(sideBarPane);
         tabPane=new TabPane();  
-        
+        viewerPane=new WebView();
+        WebEngine webEngine = viewerPane.getEngine();
         editorPane.setCenter(tabPane);
-                
+        
+        this.getChildren().add(editorPane);
+        
+    }
+    public void setCenter(){
         
     }
 
@@ -51,7 +63,7 @@ public class WorkspacePane extends StackPane{
         return tabPane;
     }
 
-    public StackPane getViewerPane() {
+    public WebView getViewerPane() {
         return viewerPane;
     }
     public PagePane getSelectedTab(){

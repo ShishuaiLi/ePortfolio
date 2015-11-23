@@ -18,6 +18,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
+import static util.Constants.CSS_CLASS_DISABLED;
+import static util.Constants.PATH_VIDEO;
 
 /**
  *
@@ -64,7 +66,7 @@ public class VideoComponent extends Component{
         FileChooser imageFileChooser = new FileChooser();
 	
 	// SET THE STARTING DIRECTORY
-	imageFileChooser.setInitialDirectory(new File(""));
+	imageFileChooser.setInitialDirectory(new File(PATH_VIDEO));
 	
 	// LET'S ONLY SEE IMAGE FILES
 	FileChooser.ExtensionFilter mp4Filter = new FileChooser.ExtensionFilter("MP4 files (*.mp4)", "*.MP4");	
@@ -77,7 +79,7 @@ public class VideoComponent extends Component{
             Path filePath=file.toPath();
 	    String path = cwd.relativize(filePath.getParent()).toString();
 	    String fileName = file.getName();
-	    
+	    imagePathTF.setText(path+"\\"+fileName);
 	}	    
 	else {
 	    // @todo provide error message for no files selected
@@ -95,6 +97,7 @@ public class VideoComponent extends Component{
         ButtonType okBt = ButtonType.OK;
         ButtonType cancelBt = ButtonType.CANCEL;
         dialog.getDialogPane().getButtonTypes().addAll(okBt,cancelBt);
+        dialog.setResizable(true);
         Optional<ButtonType> result = dialog.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
                  boo=true;
@@ -111,20 +114,21 @@ public class VideoComponent extends Component{
     }
 
     private void saveData() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     private void loadData() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     private void enableDialogPane() {
         dialogPane.setDisable(false);
+        dialogPane.getStyleClass().remove(CSS_CLASS_DISABLED);
     }
 
     private void disableDialogPane() {
         dialogPane.setDisable(true);
-        dialogPane.setStyle("-fx-opacity: 1");
+        dialogPane.getStyleClass().add(CSS_CLASS_DISABLED);
     }
     
 }

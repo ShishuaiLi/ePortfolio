@@ -11,6 +11,8 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
+import model.PortModel;
 import properties_manager.PropertiesManager;
 import static util.PropertyEnum.COLOR_LIST;
 import static util.PropertyEnum.FONT_FAMILY_LIST;
@@ -20,7 +22,9 @@ import static util.PropertyEnum.LAYOUT_LIST;
  *
  * @author Steve
  */
-public class LayoutPane extends FlowPane{
+public class LayoutPane extends GridPane{
+    private PortModel model;
+    
     private Label selectLayout;
     private ChoiceBox<String> layoutBox;
     private Label selectColor;
@@ -38,10 +42,15 @@ public class LayoutPane extends FlowPane{
     private TextField nameField;
     private Label inputFooter;
     private TextField footerField;
+    
     public LayoutPane(){
-        
+        initLayoutPane();
     }
-    public void initLayoutPane(){        
+    public LayoutPane(PortModel model){
+        this.model=model;
+        initLayoutPane();
+    }
+    public final void initLayoutPane(){        
         PropertiesManager props = PropertiesManager.getPropertiesManager();
         selectLayout=new Label("Choose layout:");
         ArrayList<String> layoutList = props.getPropertyOptionsList(LAYOUT_LIST);
@@ -75,13 +84,31 @@ public class LayoutPane extends FlowPane{
         
         inputTitle=new Label("Input page title:");
         titleField=new TextField();
+        titleField.setOnAction(e->{
+            model.getPortfolioPane().getWorkspacePane().getSelectedTab().setText(titleField.getText());
+        });
         inputName=new Label("Input student name:");
         nameField=new TextField();
         inputFooter=new Label("Input footer:");
         footerField=new TextField();
         
-        this.getChildren().addAll(selectLayout,layoutBox,selectColor,colorBox,selectPageFontFamily,
-                fontFamilyBox,inputPageFontSize,fontSizeField,selectImage,imagePath,chooseImageButton,
-                inputTitle,titleField,inputName,nameField,inputFooter,footerField);
+        add(selectLayout,0,0);
+        add(layoutBox,1,0);
+        add(selectColor,2,0);
+        add(colorBox,3,0);
+        add(selectPageFontFamily,0,1);
+        add(fontFamilyBox,1,1);
+        add(inputPageFontSize,0,2);
+        add(fontSizeField,1,2);
+        add(selectImage,0,3);
+        add(imagePath,1,3);
+        add(chooseImageButton,2,3);
+        add(inputTitle,0,4);
+        add(titleField,1,4);
+        add(inputName,2,4);
+        add(nameField,3,4);
+        add(inputFooter,0,5);
+        add(footerField,1,5);
+        
     }
 }

@@ -8,12 +8,14 @@ package pane;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.VBox;
+import model.PortModel;
 
 /**
  *
  * @author Steve
  */
 public class PagePane extends Tab{
+    private PortModel model;
     private VBox bodyPane;
     private LayoutPane layoutPane;
     private VBox contentPane;
@@ -28,12 +30,15 @@ public class PagePane extends Tab{
     }
     
     public PagePane(){
-        
+        initPagePane();
     }
-    public void initPagePane(){
+    public PagePane(PortModel model){
+        this.model=model;
+        initPagePane();
+    }
+    public final void initPagePane(){
         bodyPane=new VBox();
-        layoutPane=new LayoutPane();
-        layoutPane.initLayoutPane();
+        layoutPane=new LayoutPane(model);
         contentPane=new VBox();
         ScrollPane scroll=new ScrollPane();
         bodyPane.getChildren().addAll(layoutPane,contentPane);

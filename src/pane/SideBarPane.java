@@ -25,6 +25,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import model.PortModel;
 import static util.Constants.*;
 import util.Utility;
 
@@ -43,13 +44,18 @@ public class SideBarPane extends VBox{
     private Button edit;
     private Button remove;
     private WorkspacePane workspace;
+    private PortModel model;
     
     public SideBarPane(){
         initSideBarPane();
     }
+    public SideBarPane(PortModel model){
+        this.model=model;
+        initSideBarPane();
+    }
     public final void initSideBarPane(){
         addPage=Utility.createButton(this, ICON_ADD_PAGE, CSS_CLASS_VERTICAL_TOOLBAR_BUTTON, false);
-        removePage=Utility.createButton(this, ICON_REMOVE_PAGE, CSS_CLASS_VERTICAL_TOOLBAR_BUTTON, false);
+        removePage=Utility.createButton(this, ICON_REMOVE_PAGE, CSS_CLASS_VERTICAL_TOOLBAR_BUTTON, true);
         addText=Utility.createButton(this, ICON_ADD_TEXT, CSS_CLASS_VERTICAL_TOOLBAR_BUTTON, false);
         addImage=Utility.createButton(this, ICON_ADD_IMAGE, CSS_CLASS_VERTICAL_TOOLBAR_BUTTON, false);
         addSlideshow=Utility.createButton(this, ICON_ADD_SLIDESHOW, CSS_CLASS_VERTICAL_TOOLBAR_BUTTON, false);
@@ -66,14 +72,21 @@ public class SideBarPane extends VBox{
         addSlideshow.setOnAction(e->addSlideshowHandler());
         addVideo.setOnAction(e->addVideoHandler());
         addLink.setOnAction(e->addLinkHandler());
-        remove.setOnAction(e->removeHandler());
+        remove.setOnAction(e->removeHandler());        
+        
+    }
+    public void setBtDisable(boolean bo){
+        edit.setDisable(bo);
+        remove.setDisable(bo);
     }
     private void addPageHandler(){
-        PagePane page=new PagePane();
+        PagePane page=new PagePane(model);
         TabPane tabPane=workspace.getTabPane();
         tabPane.getTabs().add(page);
         tabPane.getSelectionModel().selectLast();
         removePage.setDisable(false);
+        page.setText("new page");
+        page.setClosable(false);
     }
     private void removePageHandler(){
         Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -100,7 +113,7 @@ public class SideBarPane extends VBox{
     public void addTextHandler(){
         PagePane currentPage=workspace.getSelectedTab();
         VBox contentPane=currentPage.getContentPane();
-        ComponentPane compPane=new ComponentPane(TEXT);
+        ComponentPane compPane=new ComponentPane(TEXT,model);
         boolean boo=compPane.showDialog();
         if(boo){
             contentPane.getChildren().add(compPane);
@@ -123,7 +136,7 @@ public class SideBarPane extends VBox{
     public void addImageHandler() {
         PagePane currentPage=workspace.getSelectedTab();
         VBox contentPane=currentPage.getContentPane();
-        ComponentPane compPane=new ComponentPane(IMAGE);
+        ComponentPane compPane=new ComponentPane(IMAGE,model);
         boolean boo=compPane.showDialog();
         if(boo){
             contentPane.getChildren().add(compPane);
@@ -134,7 +147,7 @@ public class SideBarPane extends VBox{
     public void addSlideshowHandler() {
         PagePane currentPage=workspace.getSelectedTab();
         VBox contentPane=currentPage.getContentPane();
-        ComponentPane compPane=new ComponentPane(SLIDESHOW);
+        ComponentPane compPane=new ComponentPane(SLIDESHOW,model);
         boolean boo=compPane.showDialog();
         if(boo){
             contentPane.getChildren().add(compPane);
@@ -145,7 +158,7 @@ public class SideBarPane extends VBox{
     public void addVideoHandler() {
         PagePane currentPage=workspace.getSelectedTab();
         VBox contentPane=currentPage.getContentPane();
-        ComponentPane compPane=new ComponentPane(VIDEO);
+        ComponentPane compPane=new ComponentPane(VIDEO,model);
         boolean boo=compPane.showDialog();
         if(boo){
             contentPane.getChildren().add(compPane);

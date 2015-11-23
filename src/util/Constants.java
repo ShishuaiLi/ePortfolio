@@ -11,19 +11,29 @@ package util;
  */
 public class Constants {
     // Directory Path 
+    public static String UI_PROPERTIES_FILE_NAME = "properties.xml";
+    public static String PROPERTIES_SCHEMA_FILE_NAME = "properties_schema.xsd";
     public static String PATH_DATA = "./data/";
+    public static String PATH_SLIDE_SHOWS = PATH_DATA + "slide_shows/";
     public static String PATH_IMAGES = "./images/";
     public static String PATH_ICONS = PATH_IMAGES + "icons/";
+    public static String PATH_SLIDE_SHOW_IMAGES = PATH_IMAGES + "slide_show_images/";
+    public static String PATH_CSS = "./src/style/";
+    public static String STYLE_SHEET_UI = PATH_CSS + "SlideShowMakerStyle.css";
+    public static String PATH_VIDEO = "./video/";
+
     // Icon path
-    public static String ICON_NEW_PORTFOLIO = "New.png";
-    public static String ICON_LOAD_PORTFOLIO = "Load.png";
-    public static String ICON_SAVE_PORTFOLIO = "Save.png";
-    public static String ICON_SAVEAS_PORTFOLIO = "Saveas.png";
-    public static String ICON_EXPORT_PORTFOLIO = "Export.png";
-    public static String ICON_EXIT = "Exit.png";
-    public static String ICON_ADD_PAGE = "Add_page.png";
-    public static String ICON_REMOVE_PAGE = "Remove_page.png";
+    public static String ICON_PORTFOLIO = "eportfolio.png";
     
+    public static String ICON_NEW_PORTFOLIO = "NewOrig.png";
+    public static String ICON_LOAD_PORTFOLIO = "LoadOrig.png";
+    public static String ICON_SAVE_PORTFOLIO = "SaveOrig.png";
+    public static String ICON_SAVEAS_PORTFOLIO = "Saveas.png";
+    public static String ICON_EXPORT_PORTFOLIO = "ExportOrig.png";
+    public static String ICON_EXIT = "ExitOrig.png";
+    
+    public static String ICON_ADD_PAGE = "Add_page.png";
+    public static String ICON_REMOVE_PAGE = "Remove_page.png";    
     public static String ICON_ADD_TEXT = "Add_text.png";
     public static String ICON_ADD_IMAGE = "Add_image.png";
     public static String ICON_ADD_SLIDESHOW = "Add_slideshow.png";
@@ -45,4 +55,7 @@ public class Constants {
     public static String    CSS_CLASS_LABEL_TEXT="label_text";
     public static String    CSS_CLASS_SLIDE_SHOW_FILE_HBOX="slide_show_file_hbox";
     public static String    CSS_CLASS_BACKGROUND="background";
+    
+    public static String    CSS_CLASS_DISABLED="disabled";
+    
 }

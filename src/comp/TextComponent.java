@@ -35,6 +35,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import pane.SideBarPane;
 import properties_manager.PropertiesManager;
+import static util.Constants.CSS_CLASS_DISABLED;
 import static util.PropertyEnum.FONT_FAMILY_LIST;
 
 /**
@@ -74,6 +75,7 @@ public class TextComponent extends Component {
 
     public final void initTextComponent() {
         dialogPane = new GridPane();
+        tag=new ChoiceBox<>();
         tag.getItems().addAll(H1, H2, H3, H4, H5, H6, P, OL, UL);
         textBox = new TextArea();
         centerPane = new VBox();
@@ -110,16 +112,18 @@ public class TextComponent extends Component {
                 centerPane.getChildren().clear();
                 if (newValue.equals(OL) || newValue.equals(UL)) {
                     addListBt.setVisible(true);
+                    centerPane.getChildren().clear();
                     centerPane.getChildren().addAll(lists);
                 } else {
+                    addListBt.setVisible(false);
+                    centerPane.getChildren().clear();
                     centerPane.getChildren().addAll(textBox);
                 }
             }
         };
-        tag.valueProperty().addListener(new WeakChangeListener<String>(changeListener));
+        tag.valueProperty().addListener( (changeListener));
         
-        textBox.selectionProperty().addListener(new WeakChangeListener<IndexRange>
-        (new ChangeListener<IndexRange>(){
+        textBox.selectionProperty().addListener(new ChangeListener<IndexRange>(){
             @Override
             public void changed(ObservableValue<? extends IndexRange> observable,
                     IndexRange oldValue, IndexRange newValue){
@@ -131,7 +135,7 @@ public class TextComponent extends Component {
                     controls.setAddLinkDisable(true);
                 }
             }
-        }));
+        });
     }
     @Override
     public boolean showDialog(){        
@@ -144,6 +148,7 @@ public class TextComponent extends Component {
         ButtonType okBt = ButtonType.OK;
         ButtonType cancelBt = ButtonType.CANCEL;
         dialog.getDialogPane().getButtonTypes().addAll(okBt,cancelBt);
+        dialog.setResizable(true);
         Optional<ButtonType> result = dialog.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
                  boo=true;
@@ -168,10 +173,11 @@ public class TextComponent extends Component {
         for(Node n: children2){
             if(n instanceof ListPane){
             ((TextInputControl)((ListPane)n).getChildren().get(0)).setEditable(false);
+            ((ListPane)n).getChildren().get(1).setDisable(true);
             }
             else ((TextInputControl)n).setEditable(false);
         }
-        dialogPane.setStyle("-fx-opacity: 1");             
+        dialogPane.getStyleClass().add(CSS_CLASS_DISABLED);
     }
     public void enableDialogPane(){
         ObservableList<Node> children=dialogPane.getChildren();
@@ -183,17 +189,18 @@ public class TextComponent extends Component {
         for(Node n: children2){
             if(n instanceof ListPane){
             ((TextInputControl)((ListPane)n).getChildren().get(0)).setEditable(true);
+            ((ListPane)n).getChildren().get(1).setDisable(true);
             }
             else ((TextInputControl)n).setEditable(true);
         }
-        dialogPane.setStyle("-fx-opacity: 1");
+        dialogPane.getStyleClass().remove(CSS_CLASS_DISABLED);
     }
     public void saveData(){
         
     }
 
     public void loadData() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     public void setControls(SideBarPane controls) {
@@ -216,14 +223,18 @@ public class TextComponent extends Component {
 
         public final void initListPane() {
             lists.add(this);
+            centerPane.getChildren().clear();
+            centerPane.getChildren().addAll(lists);
+            this.requestParentLayout();
             content = new TextField();
-            delete = new Button();
+            delete = new Button("Delete");
             delete.setOnAction(e -> {
                 lists.remove(this);
+                centerPane.getChildren().clear();
+                centerPane.getChildren().addAll(lists);
             });
             this.getChildren().addAll(content, delete);
-            content.selectionProperty().addListener(new WeakChangeListener<IndexRange>
-        (new ChangeListener<IndexRange>(){
+            content.selectionProperty().addListener( (new ChangeListener<IndexRange>(){
             @Override
             public void changed(ObservableValue<? extends IndexRange> observable,
                     IndexRange oldValue, IndexRange newValue){

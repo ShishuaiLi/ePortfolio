@@ -6,7 +6,7 @@
 -->
 <properties>
     <property_list>    
-        <property name="TITLE_WINDOW"		value="Slide Show Maker"></property>  
+        <property name="TITLE_WINDOW"		value="ePortfolio"></property>  
         
         <!-- PROGRAM ICON FILES -->
 		<property name="WINDOW_ICON_NAME"		value="window.png"></property>
@@ -60,5 +60,26 @@
         <property name="LECTURE_DAY_SELECT_LABEL"       value="Lecture Days"></property>
     </property_list>
     <property_options_list>
+	    <property_options name="LAYOUT_LIST">
+	          <option>center</option>
+			  <option>left</option>
+			  <option>left_bottom</option>
+			  <option>right</option>
+			  <option>fixed</option>
+	    </property_options>
+		<property_options name="COLOR_LIST">
+	          <option>yellow</option>
+			  <option>red</option>
+			  <option>green</option>
+			  <option>blue</option>
+			  <option>black</option>
+	    </property_options>
+		<property_options name="FONT_FAMILY_LIST">
+	          <option>Raleway</option>
+			  <option>Indie Flower</option>
+			  <option>Lato</option>
+			  <option>Open Sans</option>
+			  <option>IM Fell English SC</option>
+	    </property_options>
     </property_options_list>
 </properties>
