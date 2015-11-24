@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import model.PortModel;
 import pane.ComponentPane;
 
 
@@ -23,11 +24,15 @@ public abstract class Component {
     }
     
     private ComponentPane compPane;
+    protected PortModel model;
 
     public abstract boolean showDialog();
     public abstract Parent getDialogPane();
     
     public void setPane(ComponentPane compPane){
         this.compPane=compPane;
+    }
+    public void setModel(PortModel model){
+        this.model=model;
     }
 }

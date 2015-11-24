@@ -203,5 +203,9 @@ public class SideBarPane extends VBox{
     public void setAddLinkDisable(boolean bo){
         addLink.setDisable(bo);
     }
+
+    public Button getAddLink() {
+        return addLink;
+    }
     
 }

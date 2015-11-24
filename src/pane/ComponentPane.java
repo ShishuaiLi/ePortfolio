@@ -47,6 +47,7 @@ public class ComponentPane extends StackPane{
                 break;
         }
         this.model=model;
+        comp.setModel(model);
         
     }
     public void setSelectedComp(PagePane selectedTab){

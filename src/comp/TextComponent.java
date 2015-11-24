@@ -127,6 +127,7 @@ public class TextComponent extends Component {
             @Override
             public void changed(ObservableValue<? extends IndexRange> observable,
                     IndexRange oldValue, IndexRange newValue){
+                if(dialogPane.getScene().equals(model.getPortfolioPane().getScene())){
                 if(newValue.getLength()!=0){
                     controls.setAddLinkDisable(false);
                     HLNode=textBox;
@@ -134,6 +135,7 @@ public class TextComponent extends Component {
                 else{
                     controls.setAddLinkDisable(true);
                 }
+            }
             }
         });
     }
@@ -189,7 +191,7 @@ public class TextComponent extends Component {
         for(Node n: children2){
             if(n instanceof ListPane){
             ((TextInputControl)((ListPane)n).getChildren().get(0)).setEditable(true);
-            ((ListPane)n).getChildren().get(1).setDisable(true);
+            ((ListPane)n).getChildren().get(1).setDisable(false);
             }
             else ((TextInputControl)n).setEditable(true);
         }
@@ -216,6 +218,7 @@ public class TextComponent extends Component {
 
         private TextField content;
         private Button delete;
+        private IndexRange index;
 
         public ListPane() {
             initListPane();
@@ -238,15 +241,32 @@ public class TextComponent extends Component {
             @Override
             public void changed(ObservableValue<? extends IndexRange> observable,
                     IndexRange oldValue, IndexRange newValue){
+                if(dialogPane.getScene().equals(model.getPortfolioPane().getScene())){
                 if(newValue.getLength()!=0){
                     controls.setAddLinkDisable(false);
                     HLNode=content;
+                    index=HLNode.getSelection();
                 }
                 else{
                     controls.setAddLinkDisable(true);
                 }
             }
+            }
         }));
+            content.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable,
+                    Boolean oldValue, Boolean newValue){
+                if(dialogPane.getScene().equals(model.getPortfolioPane().getScene())){
+                    if(content.getScene().getFocusOwner().equals(controls.getAddLink())){
+                if(!newValue){
+                    content.requestFocus();
+                    content.selectRange(index.getStart(), index.getEnd());
+                }
+            }
+                }
+            }
+        });
         }
 
     }
