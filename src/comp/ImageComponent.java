@@ -14,6 +14,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -40,6 +41,8 @@ public class ImageComponent extends Component{
     private TextField heightField;
     ImageView imageView;
     
+    private ChoiceBox floatBox;
+    
     
     public ImageComponent() {
         initImageComponent();
@@ -53,6 +56,9 @@ public class ImageComponent extends Component{
         widthField=new TextField();
         heightField=new TextField();
         imageView=new ImageView();
+        
+        floatBox=new ChoiceBox();
+        floatBox.getItems().addAll("float-left","float-right","neither");
         chooseImageBt.setOnAction(e->{
             selectImageDialog();
             updateSlideImage();
@@ -82,7 +88,9 @@ public class ImageComponent extends Component{
         dialogPane.add(widthField, 1, 2);
         dialogPane.add(new Label("Height:"), 2, 2);
         dialogPane.add(heightField, 3, 2);
-        dialogPane.add(imageView, 0, 3);
+        dialogPane.add(new Label("Float:"), 0, 3);
+        dialogPane.add(floatBox, 1, 3);
+        dialogPane.add(imageView, 0, 4);
     }
     public void updateSlideImage() {
 	String imagePath = imagePathTF.getText();

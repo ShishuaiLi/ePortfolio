@@ -5,6 +5,7 @@
  */
 package pane;
 
+import java.net.MalformedURLException;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
@@ -41,14 +42,33 @@ public class WorkspacePane extends StackPane{
         editorPane.setLeft(sideBarPane);
         tabPane=new TabPane();  
         viewerPane=new WebView();
-        WebEngine webEngine = viewerPane.getEngine();
+        
+        initWebView();
         editorPane.setCenter(tabPane);
         
         this.getChildren().add(editorPane);
         
     }
-    public void setCenter(){
-        
+    
+    private void initWebView(){
+        /*Alert errorAlert=new Alert(Alert.AlertType.ERROR);
+        errorAlert.setHeaderText("Invalid URL address. "+
+        "Try again.");
+        errorAlert.showAndWait();
+        return;
+         */ 
+        WebEngine webEngine = viewerPane.getEngine();
+        webEngine.load("http://www.google.com");
+    }
+    public void setViewer(boolean bo){
+        if(bo) {
+            this.getChildren().clear();
+            this.getChildren().add(viewerPane);
+        }
+        else{
+            this.getChildren().clear();
+            this.getChildren().add(editorPane);
+        }
     }
 
     public BorderPane getEditorPane() {

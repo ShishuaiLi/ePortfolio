@@ -29,8 +29,14 @@ public class PageToolBarPane extends HBox{
         initPageToolBarPane();
     }
     public final void initPageToolBarPane(){
-        selectEditor=Utility.createButton(this, ICON_SELECT_EDITOR_PANE, CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, true);
-        selectViewor=Utility.createButton(this, ICON_SELECT_VIEWER_PANE, CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, true);
+        selectEditor=Utility.createButton(this, ICON_SELECT_EDITOR_PANE, CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, false);
+        selectViewor=Utility.createButton(this, ICON_SELECT_VIEWER_PANE, CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, false);
         
+        selectEditor.setOnAction(e->{
+            model.getPortfolioPane().getWorkspacePane().setViewer(false);
+        });
+        selectViewor.setOnAction(e->{
+            model.getPortfolioPane().getWorkspacePane().setViewer(true);
+        });
     }
 }
