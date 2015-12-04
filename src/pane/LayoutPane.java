@@ -5,6 +5,9 @@
  */
 package pane;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -13,8 +16,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.stage.FileChooser;
 import model.PortModel;
 import properties_manager.PropertiesManager;
+import static util.Constants.PATH_IMAGES;
 import static util.PropertyEnum.COLOR_LIST;
 import static util.PropertyEnum.FONT_FAMILY_LIST;
 import static util.PropertyEnum.LAYOUT_LIST;
@@ -82,6 +87,9 @@ public class LayoutPane extends GridPane{
         selectImage=new Label("Choose banner image:");
         imagePath=new TextField();
         chooseImageButton=new Button("Choose image...");
+        chooseImageButton.setOnAction(e->{
+            selectImageDialog();
+        });
         
         inputTitle=new Label("Input page title:");
         titleField=new TextField();
@@ -112,4 +120,31 @@ public class LayoutPane extends GridPane{
         add(footerField,1,5);
         
     }
+    private void selectImageDialog(){
+        FileChooser imageFileChooser = new FileChooser();
+	
+	// SET THE STARTING DIRECTORY
+	imageFileChooser.setInitialDirectory(new File(PATH_IMAGES));
+	
+	// LET'S ONLY SEE IMAGE FILES
+	FileChooser.ExtensionFilter jpgFilter = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.JPG");
+	FileChooser.ExtensionFilter pngFilter = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.PNG");
+	FileChooser.ExtensionFilter gifFilter = new FileChooser.ExtensionFilter("GIF files (*.gif)", "*.GIF");
+	imageFileChooser.getExtensionFilters().addAll(jpgFilter, pngFilter, gifFilter);
+	
+	// LET'S OPEN THE FILE CHOOSER
+	File file = imageFileChooser.showOpenDialog(this.getScene().getWindow());
+	if (file != null) {
+            Path cwd=Paths.get("").toAbsolutePath();
+            Path filePath=file.toPath();
+	    String path = cwd.relativize(filePath.getParent()).toString();
+	    String fileName = file.getName();
+	    imagePath.setText(path+"\\"+fileName);
+
+	}	    
+	else {
+	    // @todo provide error message for no files selected
+	}
+    }
+    
 }

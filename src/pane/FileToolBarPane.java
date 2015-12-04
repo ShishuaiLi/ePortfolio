@@ -40,6 +40,11 @@ public class FileToolBarPane extends HBox{
         saveAsFile=Utility.createButton(this, ICON_SAVEAS_PORTFOLIO, CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, true);
         exportFile=Utility.createButton(this, ICON_EXPORT_PORTFOLIO, CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, true);
         exit=Utility.createButton(this, ICON_EXIT, CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, false);
+        newFile.setOnAction(e->newFileHandler());
+    }
+    
+    public void newFileHandler(){
+        
     }
     
 }
