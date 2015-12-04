@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
@@ -41,7 +42,7 @@ public class LayoutPane extends GridPane{
     private Label inputName;
     private TextField nameField;
     private Label inputFooter;
-    private TextField footerField;
+    private TextArea footerField;
     
     public LayoutPane(){
         initLayoutPane();
@@ -90,7 +91,7 @@ public class LayoutPane extends GridPane{
         inputName=new Label("Input student name:");
         nameField=new TextField();
         inputFooter=new Label("Input footer:");
-        footerField=new TextField();
+        footerField=new TextArea();
         
         add(selectLayout,0,0);
         add(layoutBox,1,0);

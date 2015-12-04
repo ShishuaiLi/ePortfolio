@@ -191,13 +191,18 @@ public class SideBarPane extends VBox{
     public void removeHandler(){
         PagePane currentPage=workspace.getSelectedTab();
         VBox contentPane=currentPage.getContentPane();
-        ObservableList<Node> comps=contentPane.getChildren();
-        for(Node n: comps){
-            if(n.isFocused()){
-                comps.remove(n);               
-                break;
+        ComponentPane comp=currentPage.getSelectedComp();
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation Dialog");
+        alert.setContentText("Are you sure to delete this component ?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if(result.isPresent()){
+            if(result.get()==ButtonType.OK){
+                contentPane.getChildren().remove(comp);   
             }
         }
+               
+        
     }
     
     public void setAddLinkDisable(boolean bo){
