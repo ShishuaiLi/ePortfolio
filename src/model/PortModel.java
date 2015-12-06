@@ -13,6 +13,7 @@ import pane.PortfolioPane;
  */
 public class PortModel {
     private PortfolioPane portfolioPane;
+    private boolean saved=false;
     
     public PortModel(){
         
@@ -24,6 +25,14 @@ public class PortModel {
 
     public PortfolioPane getPortfolioPane() {
         return portfolioPane;
+    }
+
+    public boolean isSaved() {
+        return saved;
+    }
+
+    public void setSaved(boolean saved) {
+        this.saved = saved;
     }
     
 }

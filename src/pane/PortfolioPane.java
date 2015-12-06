@@ -26,12 +26,16 @@ public class PortfolioPane extends BorderPane {
         model=new PortModel(this);
         topPane=new HBox();
         fileToolBarPane=new FileToolBarPane(model);
+        
+        topPane.getChildren().addAll(fileToolBarPane);
+        this.setTop(this.topPane);                
+        
+    }
+    public void initNewFile(){
         pageToolBarPane=new PageToolBarPane(model);
         workspacePane=new WorkspacePane(model);
-        topPane.getChildren().addAll(fileToolBarPane,pageToolBarPane);
-        this.setTop(this.topPane);
-        this.setCenter(this.workspacePane);        
-        
+        topPane.getChildren().addAll(pageToolBarPane);
+        this.setCenter(this.workspacePane);
     }
 
     public WorkspacePane getWorkspacePane() {
