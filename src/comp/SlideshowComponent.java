@@ -17,6 +17,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javax.json.Json;
+import javax.json.JsonObject;
 import ssm.SlideShowMaker;
 
 /**
@@ -25,6 +27,11 @@ import ssm.SlideShowMaker;
  */
 public class SlideshowComponent extends Component{
     public static final String IFRAME = "iframe";
+    public static final String TYPE = "type";
+    public static final String TITLE = "title";
+    public static final String WIDTH = "width";
+    public static final String HEIGHT = "height";
+    public static final String SLIDES_NUM = "slides_num";
     
     private StackPane dialogPane;
     private Label title;
@@ -100,6 +107,18 @@ public class SlideshowComponent extends Component{
     @Override
     public Parent getDialogPane() {
         return showPane;
+    }
+    
+    @Override
+   public JsonObject saveData(){
+        JsonObject js = Json.createObjectBuilder()
+                .add(TYPE, ComponentType.SLIDESHOW.name())
+                .add(TITLE, title.getText())
+                .add(WIDTH, width.getText())
+                .add(HEIGHT, height.getText())
+                .add(SLIDES_NUM, slidesNum)
+                .build();
+        return js;
     }
     
 }

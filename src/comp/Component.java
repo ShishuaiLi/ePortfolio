@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javax.json.JsonObject;
 import model.PortModel;
 import pane.ComponentPane;
 
@@ -28,6 +29,7 @@ public abstract class Component {
 
     public abstract boolean showDialog();
     public abstract Parent getDialogPane();
+    public abstract JsonObject saveData();
     
     public void setPane(ComponentPane compPane){
         this.compPane=compPane;
@@ -35,4 +37,5 @@ public abstract class Component {
     public void setModel(PortModel model){
         this.model=model;
     }
+    
 }

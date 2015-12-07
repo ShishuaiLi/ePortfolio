@@ -12,11 +12,14 @@ import java.util.ArrayList;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
+import javax.json.Json;
+import javax.json.JsonObject;
 import model.PortModel;
 import properties_manager.PropertiesManager;
 import static util.Constants.PATH_IMAGES;
@@ -29,6 +32,15 @@ import static util.PropertyEnum.LAYOUT_LIST;
  * @author Steve
  */
 public class LayoutPane extends GridPane{
+    public static String LAYOUT = "layout";
+    public static String COLOR = "color";
+    public static String FONT = "font";
+    public static String FONT_SIZE = "font_size";
+    public static String IMAGE = "image";
+    public static String TITLE = "title";
+    public static String NAME = "name";
+    public static String FOOTER = "footer";
+    
     private PortModel model;
     
     private Label selectLayout;
@@ -100,6 +112,7 @@ public class LayoutPane extends GridPane{
         nameField=new TextField();
         inputFooter=new Label("Input footer:");
         footerField=new TextArea();
+        footerField.setPrefRowCount(3);
         
         add(selectLayout,0,0);
         add(layoutBox,1,0);
@@ -145,6 +158,20 @@ public class LayoutPane extends GridPane{
 	else {
 	    // @todo provide error message for no files selected
 	}
+    }
+    
+    public JsonObject makePageInfoJsonObject(){
+        JsonObject pageInfo = Json.createObjectBuilder()
+                .add(LAYOUT, layoutBox.getValue())
+                .add(COLOR, colorBox.getValue())
+                .add(FONT, fontFamilyBox.getValue())
+                .add(FONT_SIZE, fontSizeField.getText())
+                .add(IMAGE, imagePath.getText())
+                .add(TITLE, titleField.getText())
+                .add(NAME, nameField.getText())
+                .add(FOOTER, footerField.getText())
+                .build();
+        return pageInfo;
     }
     
 }

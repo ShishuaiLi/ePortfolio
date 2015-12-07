@@ -6,13 +6,26 @@
 package pane;
 
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.HBox;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonWriter;
 import model.PortModel;
 
 import static util.Constants.*;
@@ -23,6 +36,14 @@ import util.Utility;
  * @author Steve
  */
 public class FileToolBarPane extends HBox{
+    public static String JSON_TITLE = "title";
+    public static String PAGE_INFO = "page_info";
+    public static String JSON_IMAGE_FILE_NAME = "image_file_name";
+    public static String JSON_IMAGE_PATH = "image_path";
+    public static String JSON_EXT = ".json";
+    public static String SLASH = "/";
+    public static String CAPTION="caption";
+    
     private PortModel model;
     private Button newFile;
     private Button loadFile;
@@ -62,6 +83,63 @@ public class FileToolBarPane extends HBox{
     
     public void saveFileHandler(){
         
+        TabPane tabPane=model.getPortfolioPane().getWorkspacePane().getTabPane();
+        
+        // BUILD THE FILE PATH
+        String portTitle = model.getTitle();
+        String jsonFilePath = PATH_EPORTFOLIOS + portTitle + JSON_EXT;
+        
+        // INIT THE WRITER
+        OutputStream os = null;
+        try {
+            os = new FileOutputStream(jsonFilePath);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(FileToolBarPane.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        JsonWriter jsonWriter = Json.createWriter(os);  
+           
+        // BUILD THE SLIDES ARRAY
+        JsonArray slidesJsonArray = makePagesJsonArray(tabPane.getTabs());
+        
+        // NOW BUILD THE COURSE USING EVERYTHING WE'VE ALREADY MADE
+        JsonObject courseJsonObject = Json.createObjectBuilder()
+                                    .add(JSON_TITLE, slideShowToSave.getTitle())
+                                    .add(JSON_SLIDES, slidesJsonArray)
+                .build();
+        
+        // AND SAVE EVERYTHING AT ONCE
+        jsonWriter.writeObject(courseJsonObject);
+        jsonWriter.close();
+        os.close();
+    }
+    
+    private JsonArray makePagesJsonArray(ObservableList<Tab> tabs) {
+        JsonArrayBuilder jsb = Json.createArrayBuilder();
+        for (Tab tab : tabs) {
+	    JsonObject page = makeTabJsonObject(tab);
+	    jsb.add(page);
+        }
+        JsonArray jA = jsb.build();
+        return jA;        
+    }
+    
+    private JsonObject makeTabJsonObject(Tab tb) {
+        PagePane tab=(PagePane)tb;
+        JsonObject pageInfo = tab.getLayoutPane().makePageInfoJsonObject();
+        
+        JsonObject page = Json.createObjectBuilder()
+		.add(PAGE_INFO, pageInfo)
+		.add(JSON_IMAGE_PATH, slide.getImagePath())
+                .add(CAPTION, slide.getCaption())
+		.build();
+	return jso;
+    }
+    
+    private JsonObject makePageInfoJsonObject(Tab tb){
+        PagePane tab=(PagePane)tb;
+        LayoutPane LP=tab.getLayoutPane();
+        JsonObject pageInfo = Json.createObjectBuilder()
+                .add(LAYOUT, LP)
     }
     
     public void saveAsFileHandler(){

@@ -14,6 +14,7 @@ import pane.PortfolioPane;
 public class PortModel {
     private PortfolioPane portfolioPane;
     private boolean saved=false;
+    private String title="new eportfolio";
     
     public PortModel(){
         
@@ -22,6 +23,8 @@ public class PortModel {
     public PortModel(PortfolioPane portfolioPane){
         this.portfolioPane=portfolioPane;
     }
+    
+
 
     public PortfolioPane getPortfolioPane() {
         return portfolioPane;
@@ -33,6 +36,14 @@ public class PortModel {
 
     public void setSaved(boolean saved) {
         this.saved = saved;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
     
 }

@@ -5,6 +5,7 @@
  */
 package comp;
 
+
 import java.util.ArrayList;
 import java.util.Optional;
 import javafx.beans.InvalidationListener;
@@ -33,6 +34,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
 import pane.SideBarPane;
 import properties_manager.PropertiesManager;
 import static util.Constants.CSS_CLASS_DISABLED;
@@ -43,6 +48,13 @@ import static util.PropertyEnum.FONT_FAMILY_LIST;
  * @author Steve
  */
 public class TextComponent extends Component {
+    public static final String TYPE = "type";
+    public static final String TEXT_TYPE = "text_type";
+    public static final String FONT = "font";
+    public static final String FONT_SIZE = "font_size";
+    public static final String CONTENT = "content";
+    
+    
 
     public static final String H1 = "h1";
     public static final String H2 = "h2";
@@ -197,8 +209,26 @@ public class TextComponent extends Component {
         }
         dialogPane.getStyleClass().remove(CSS_CLASS_DISABLED);
     }
-    public void saveData(){
-        
+    @Override
+    public JsonObject saveData(){
+        JsonArrayBuilder jsb = Json.createArrayBuilder();
+        if (tag.getValue().equals(OL) || tag.getValue().equals(UL)) {
+            for(ListPane ls:lists){
+                jsb.add(ls.content.getText());
+            }
+        }
+        else{
+            jsb.add(textBox.getText());
+        }
+        JsonArray jA = jsb.build();
+        JsonObject textJs = Json.createObjectBuilder()
+                .add(TYPE, ComponentType.TEXT.name())
+                .add(TEXT_TYPE, tag.getValue())
+                .add(FONT, fontFamilyBox.getValue())
+                .add(FONT_SIZE, fontSizeField.getText())
+                .add(CONTENT, jA)
+                .build();
+        return textJs;
     }
 
     public void loadData() {
@@ -270,4 +300,5 @@ public class TextComponent extends Component {
         }
 
     }
+    
 }

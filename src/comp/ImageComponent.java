@@ -22,6 +22,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
+import javax.json.Json;
+import javax.json.JsonObject;
 import static util.Constants.CSS_CLASS_DISABLED;
 import static util.Constants.PATH_IMAGES;
 
@@ -30,6 +32,13 @@ import static util.Constants.PATH_IMAGES;
  * @author Steve
  */
 public class ImageComponent extends Component{
+    public static final String TYPE = "type";
+    public static final String IMAGE = "image";
+    public static final String CAPTION = "caption";
+    public static final String WIDTH = "width";
+    public static final String HEIGHT = "height";
+    public static final String FLOAT = "float";
+    
     public static final String IMG = "img";
     public static final String P = "p";
     
@@ -41,7 +50,7 @@ public class ImageComponent extends Component{
     private TextField heightField;
     ImageView imageView;
     
-    private ChoiceBox floatBox;
+    private ChoiceBox<String> floatBox;
     
     
     public ImageComponent() {
@@ -57,7 +66,7 @@ public class ImageComponent extends Component{
         heightField=new TextField();
         imageView=new ImageView();
         
-        floatBox=new ChoiceBox();
+        floatBox=new ChoiceBox<>();
         floatBox.getItems().addAll("float-left","float-right","neither");
         chooseImageBt.setOnAction(e->{
             selectImageDialog();
@@ -171,8 +180,17 @@ public class ImageComponent extends Component{
         return dialogPane;
     }
 
-    public void saveData() {
-        
+    @Override
+    public JsonObject saveData(){
+        JsonObject js = Json.createObjectBuilder()
+                .add(TYPE, ComponentType.IMAGE.name())
+                .add(IMAGE, imagePathTF.getText())
+                .add(CAPTION, captionField.getText())
+                .add(WIDTH, widthField.getText())
+                .add(HEIGHT, heightField.getText())
+                .add(FLOAT, floatBox.getValue())
+                .build();
+        return js;
     }
 
     public void enableDialogPane() {
