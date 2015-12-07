@@ -75,6 +75,7 @@ public class SideBarPane extends VBox{
         remove.setOnAction(e->removeHandler());        
         
     }
+    
     public void setBtDisable(boolean bo){
         edit.setDisable(bo);
         remove.setDisable(bo);

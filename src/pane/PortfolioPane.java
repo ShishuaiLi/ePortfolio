@@ -41,5 +41,9 @@ public class PortfolioPane extends BorderPane {
     public WorkspacePane getWorkspacePane() {
         return workspacePane;
     }
+
+    public FileToolBarPane getFileToolBarPane() {
+        return fileToolBarPane;
+    }
     
 }

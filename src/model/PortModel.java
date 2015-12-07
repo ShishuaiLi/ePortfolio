@@ -22,6 +22,7 @@ public class PortModel {
     
     public PortModel(PortfolioPane portfolioPane){
         this.portfolioPane=portfolioPane;
+        
     }
     
 
@@ -36,6 +37,7 @@ public class PortModel {
 
     public void setSaved(boolean saved) {
         this.saved = saved;
+        portfolioPane.getFileToolBarPane().setSaveBtDisable(saved);
     }
 
     public String getTitle() {

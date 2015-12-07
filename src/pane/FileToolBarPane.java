@@ -6,6 +6,7 @@
 package pane;
 
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,12 +16,14 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.FileChooser;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -38,11 +41,11 @@ import util.Utility;
 public class FileToolBarPane extends HBox{
     public static String JSON_TITLE = "title";
     public static String PAGE_INFO = "page_info";
-    public static String JSON_IMAGE_FILE_NAME = "image_file_name";
+    public static String COMPS = "comps";
     public static String JSON_IMAGE_PATH = "image_path";
     public static String JSON_EXT = ".json";
     public static String SLASH = "/";
-    public static String CAPTION="caption";
+    public static String PAGES="pages";
     
     private PortModel model;
     private Button newFile;
@@ -62,8 +65,8 @@ public class FileToolBarPane extends HBox{
     public final void initFileToolBarPane(){
         newFile=Utility.createButton(this, ICON_NEW_PORTFOLIO, CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, false);
         loadFile=Utility.createButton(this, ICON_LOAD_PORTFOLIO, CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, false);
-        saveFile=Utility.createButton(this, ICON_SAVE_PORTFOLIO, CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, true);
-        saveAsFile=Utility.createButton(this, ICON_SAVEAS_PORTFOLIO, CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, true);
+        saveFile=Utility.createButton(this, ICON_SAVE_PORTFOLIO, CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, false);
+        saveAsFile=Utility.createButton(this, ICON_SAVEAS_PORTFOLIO, CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, false);
         exportFile=Utility.createButton(this, ICON_EXPORT_PORTFOLIO, CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, true);
         exit=Utility.createButton(this, ICON_EXIT, CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, false);
         newFile.setOnAction(e->newFileHandler());
@@ -71,6 +74,10 @@ public class FileToolBarPane extends HBox{
         saveFile.setOnAction(e->saveFileHandler());
         saveAsFile.setOnAction(e->saveAsFileHandler());
         exit.setOnAction(e->exitHandler());
+        
+    }
+    public void setSaveBtDisable(boolean saved){
+        saveFile.setDisable(saved);
     }
     
     public void exitHandler(){
@@ -99,18 +106,23 @@ public class FileToolBarPane extends HBox{
         JsonWriter jsonWriter = Json.createWriter(os);  
            
         // BUILD THE SLIDES ARRAY
-        JsonArray slidesJsonArray = makePagesJsonArray(tabPane.getTabs());
+        JsonArray pages = makePagesJsonArray(tabPane.getTabs());
         
         // NOW BUILD THE COURSE USING EVERYTHING WE'VE ALREADY MADE
         JsonObject courseJsonObject = Json.createObjectBuilder()
-                                    .add(JSON_TITLE, slideShowToSave.getTitle())
-                                    .add(JSON_SLIDES, slidesJsonArray)
-                .build();
+                                    .add(JSON_TITLE, portTitle)
+                                    .add(PAGES, pages)
+                                    .build();
         
         // AND SAVE EVERYTHING AT ONCE
         jsonWriter.writeObject(courseJsonObject);
         jsonWriter.close();
-        os.close();
+        try {
+            os.close();
+        } catch (IOException ex) {
+            Logger.getLogger(FileToolBarPane.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        model.setSaved(true);
     }
     
     private JsonArray makePagesJsonArray(ObservableList<Tab> tabs) {
@@ -126,24 +138,40 @@ public class FileToolBarPane extends HBox{
     private JsonObject makeTabJsonObject(Tab tb) {
         PagePane tab=(PagePane)tb;
         JsonObject pageInfo = tab.getLayoutPane().makePageInfoJsonObject();
-        
+        JsonArray jA = makeCompsJsonArray(tab);
         JsonObject page = Json.createObjectBuilder()
 		.add(PAGE_INFO, pageInfo)
-		.add(JSON_IMAGE_PATH, slide.getImagePath())
-                .add(CAPTION, slide.getCaption())
+		.add(COMPS, jA)
 		.build();
-	return jso;
+	return page;
     }
     
-    private JsonObject makePageInfoJsonObject(Tab tb){
-        PagePane tab=(PagePane)tb;
-        LayoutPane LP=tab.getLayoutPane();
-        JsonObject pageInfo = Json.createObjectBuilder()
-                .add(LAYOUT, LP)
+    private JsonArray makeCompsJsonArray(PagePane tab){
+        JsonArrayBuilder jsb = Json.createArrayBuilder();
+        ObservableList<Node> children = tab.getContentPane().getChildren();
+        for(Node nd: children){
+            JsonObject comp = makeCompJsonObject(nd);
+	    jsb.add(comp);
+        }
+        JsonArray jA = jsb.build();
+        return jA;
+    }
+    
+    private JsonObject makeCompJsonObject(Node nd) {
+        ComponentPane compPane=(ComponentPane) nd;
+        return compPane.getComp().saveData();
     }
     
     public void saveAsFileHandler(){
-        
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("JSON files (*.json)", "*.json");
+        fileChooser.getExtensionFilters().add(extFilter);
+        fileChooser.setInitialDirectory(new File(PATH_EPORTFOLIOS));
+        File file = fileChooser.showSaveDialog(this.getScene().getWindow());
+        if(file != null){
+            model.setTitle(file.getName().split("\\.")[0]);
+            saveFileHandler();
+        }
     }
     
     public void newFileHandler(){
@@ -176,8 +204,7 @@ public class FileToolBarPane extends HBox{
                 saveWork=false;
                 }
             if (saveWork){
-                
-                model.setSaved(true);
+                saveFileHandler();
             }
             else if(result.get()==ButtonType.NO){
                 return true;
@@ -185,5 +212,7 @@ public class FileToolBarPane extends HBox{
         }
         return false;
     }
+
+    
         
 }
