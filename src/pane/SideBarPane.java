@@ -80,7 +80,7 @@ public class SideBarPane extends VBox{
         edit.setDisable(bo);
         remove.setDisable(bo);
     }
-    private void addPageHandler(){
+    public PagePane addPageHandler(){
         PagePane page=new PagePane(model);
         TabPane tabPane=workspace.getTabPane();
         tabPane.getTabs().add(page);
@@ -88,8 +88,9 @@ public class SideBarPane extends VBox{
         removePage.setDisable(false);
         page.setText("new page");
         page.setClosable(false);
+        return page;
     }
-    private void removePageHandler(){
+    public void removePageHandler(){
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Confirmation Dialog");
         alert.setContentText("Are you sure to delete this page ?");

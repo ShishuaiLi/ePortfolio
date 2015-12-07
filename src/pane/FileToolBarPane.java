@@ -6,10 +6,14 @@
 package pane;
 
 
+import comp.Component;
+import static comp.TextComponent.TYPE;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -23,11 +27,13 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.json.JsonReader;
 import javax.json.JsonWriter;
 import model.PortModel;
 
@@ -85,8 +91,63 @@ public class FileToolBarPane extends HBox{
     }
     
     public void loadFileHandler(){
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("JSON files (*.json)", "*.json");
+        fileChooser.getExtensionFilters().add(extFilter);
+        fileChooser.setInitialDirectory(new File(PATH_EPORTFOLIOS));
+        File file = fileChooser.showOpenDialog(this.getScene().getWindow());
+        JsonObject json =null;
+        if(file == null){
+            return;
+        }
+        try {
+                json=loadJSONFile(file.getAbsolutePath());
+            } catch (IOException ex) {
+                Logger.getLogger(FileToolBarPane.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        newFileHandler();
+        model.setTitle(json.getString(JSON_TITLE));
+        JsonArray pages = json.getJsonArray(PAGES);
+        for (int i = 0; i < pages.size(); i++) {
+	    JsonObject page = pages.getJsonObject(i);
+	    loadLayoutPane(page.getJsonObject(PAGE_INFO));
+            JsonArray comps = page.getJsonArray(COMPS);
+            for (int j = 0; j < comps.size(); j++) {
+                JsonObject comp = comps.getJsonObject(j);
+                loadComponent(comp);
+            }
+	}
         
     }
+    public void loadComponent(JsonObject jso){
+        PagePane currentPage=model.getPortfolioPane().getWorkspacePane().getSelectedTab();
+        VBox contentPane=currentPage.getContentPane();
+        String stringType=jso.getString(TYPE);
+        Component.ComponentType type=null;
+        switch(stringType){
+            case "TEXT": type=type.TEXT; break;
+            case "IMAGE": type=type.IMAGE; break;
+            case "SLIDESHOW": type=type.SLIDESHOW; break;
+            case "VIDEO": type=type.VIDEO; break;
+        }
+        ComponentPane compPane=new ComponentPane(type,model);
+        
+    }
+    
+    public void loadLayoutPane(JsonObject jso){
+        PagePane page = model.getPortfolioPane().getWorkspacePane().getSideBarPane().addPageHandler();
+        LayoutPane LP=page.getLayoutPane();
+        LP.loadData(jso);
+    }
+    
+    private JsonObject loadJSONFile(String jsonFilePath) throws IOException {
+        InputStream is = new FileInputStream(jsonFilePath);
+        JsonReader jsonReader = Json.createReader(is);
+        JsonObject json = jsonReader.readObject();
+        jsonReader.close();
+        is.close();
+        return json;
+    }    
     
     public void saveFileHandler(){
         

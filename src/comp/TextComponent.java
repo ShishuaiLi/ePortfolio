@@ -168,7 +168,7 @@ public class TextComponent extends Component {
                  boo=true;
                  
  }
-        loadData();
+
         disableDialogPane();
         return boo;
     }

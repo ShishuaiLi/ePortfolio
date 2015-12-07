@@ -174,4 +174,15 @@ public class LayoutPane extends GridPane{
         return pageInfo;
     }
     
+    public void loadData(JsonObject jso){
+    layoutBox.setValue(jso.getString(LAYOUT));
+    colorBox.setValue(jso.getString(COLOR));
+    fontFamilyBox.setValue(jso.getString(FONT));
+    fontSizeField.setText(jso.getString(FONT_SIZE));
+    imagePath.setText(jso.getString(IMAGE));
+    titleField.setText(jso.getString(TITLE));
+    nameField.setText(jso.getString(NAME));
+    footerField.setText(jso.getString(FOOTER));
+    }
+    
 }
