@@ -209,7 +209,7 @@ public class SlideShowFileManager {
             Path imgPath=slideShowPath.toPath().resolve("img");
             for(Slide slide: slides){
                 Path imagePath=Paths.get(slide.getImagePath()).resolve(slide.getImageFileName());
-                Files.copy(imagePath, imgPath.resolve(slide.getImageFileName()));
+                Files.copy(imagePath, imgPath.resolve(slide.getImageFileName()),StandardCopyOption.REPLACE_EXISTING);
             }
             }
             catch (IOException e) {

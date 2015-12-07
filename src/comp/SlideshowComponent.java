@@ -39,7 +39,7 @@ public class SlideshowComponent extends Component{
     private Label height;
     private GridPane showPane;
     
-    private int slidesNum;
+    private Label slidesNum;
     private SlideShowMaker ssm;
     
     public SlideshowComponent(){
@@ -54,8 +54,9 @@ public class SlideshowComponent extends Component{
         showPane=new GridPane();
         showPane.add(new Label("Slideshow title:"), 0, 0);
         showPane.add(title, 1, 0);
-        showPane.add(new Label("Slides number: "+slidesNum), 0, 1);
-
+        slidesNum=new Label("Slides number: ");
+        showPane.add(slidesNum, 0, 1);
+        
         showPane.add(new Label("Width:"), 0, 2);
         showPane.add(width, 1, 2);
         showPane.add(new Label("Height:"), 2, 2);
@@ -75,6 +76,8 @@ public class SlideshowComponent extends Component{
         ssm.start(dialogPane);
         if(title.getText()!=null&&!title.getText().equals("")){
             boolean booo=ssm.getUi().getFileController().handleLoadSlideShowRequest(title.getText());
+            ssm.getUi().getWidthField().setText(width.getText());
+            ssm.getUi().getHeightField().setText(height.getText());
             //throw exception when the JSon file does not exist anymore, load failed
             if(!booo){
                 
@@ -90,7 +93,7 @@ public class SlideshowComponent extends Component{
                         public void handle(ActionEvent e) {
                             ssm.getUi().getSaveSlideShowButton().fire();
                             title.setText(ssm.getUi().getSlideShow().getTitle());
-                            slidesNum=ssm.getUi().getSlideShow().getSlides().size();
+                            slidesNum.setText("Slides number: "+ssm.getUi().getSlideShow().getSlides().size());                            
                             width.setText(ssm.getUi().getWidthField().getText());
                             height.setText(ssm.getUi().getHeightField().getText());
                         };
@@ -116,7 +119,6 @@ public class SlideshowComponent extends Component{
                 .add(TITLE, title.getText())
                 .add(WIDTH, width.getText())
                 .add(HEIGHT, height.getText())
-                .add(SLIDES_NUM, slidesNum)
                 .build();
         return js;
     }

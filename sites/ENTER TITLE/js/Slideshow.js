@@ -1,4 +1,4 @@
-var json={"title":"new world","slides":[{"image_file_name":"ArchesUtah.jpg","image_path":"img","caption":"first2"},{"image_file_name":"BadlandsSouthDakota.jpg","image_path":"img","caption":"second"}]}
+var json={"title":"ENTER TITLE","slides":[{"image_file_name":"DefaultStartSlide.png","image_path":"img","caption":"ENTER CAPTION"},{"image_file_name":"DefaultStartSlide.png","image_path":"img","caption":"ENTER CAPTION"},{"image_file_name":"DefaultStartSlide.png","image_path":"img","caption":"ENTER CAPTION"},{"image_file_name":"DefaultStartSlide.png","image_path":"img","caption":"ENTER CAPTION"}]}
 var slides=json.slides;
 var slash="/";
 var slideNum=0;

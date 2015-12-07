@@ -3,6 +3,8 @@ package ssm.model;
 import java.io.File;
 import java.net.URL;
 import javafx.scene.image.Image;
+import properties_manager.PropertiesManager;
+import ssm.LanguagePropertyType;
 import static ssm.file.SlideShowFileManager.SLASH;
 import ssm.view.SlideEditView;
 
@@ -26,6 +28,8 @@ public class Slide {
     public Slide(String initImageFileName, String initImagePath) {
 	imageFileName = initImageFileName;
 	imagePath = initImagePath;
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
+        caption=props.getProperty(LanguagePropertyType.DEFAULT_IMAGE_CAPTION);
     }
     public Slide(String initImageFileName, String initImagePath,String caption) {
 	imageFileName = initImageFileName;
