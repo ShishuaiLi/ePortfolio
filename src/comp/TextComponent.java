@@ -231,8 +231,22 @@ public class TextComponent extends Component {
         return textJs;
     }
 
-    public void loadData() {
-        
+    @Override
+    public void loadData(JsonObject jso) {
+        tag.setValue(jso.getString(TEXT_TYPE));
+        fontFamilyBox.setValue(jso.getString(FONT));
+        fontSizeField.setText(jso.getString(FONT_SIZE));
+        JsonArray jA = jso.getJsonArray(CONTENT);
+        if (tag.getValue().equals(OL) || tag.getValue().equals(UL)) {
+            for (int i = 0; i < jA.size(); i++) {
+                ListPane lp=new ListPane();
+	        lp.content.setText(jA.getString(i));                
+            }
+        }
+        else{
+                textBox.setText(jA.getString(0));
+        }
+        disableDialogPane();
     }
 
     public void setControls(SideBarPane controls) {

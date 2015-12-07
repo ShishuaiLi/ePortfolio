@@ -35,6 +35,7 @@ public class ComponentPane extends StackPane{
         switch(compType){
             case TEXT:
                 comp=new TextComponent();
+                ((TextComponent)comp).setControls(model.getPortfolioPane().getWorkspacePane().getSideBarPane());
                 break;
             case IMAGE:
                 comp=new ImageComponent();

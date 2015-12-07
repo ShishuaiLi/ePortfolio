@@ -109,7 +109,7 @@ public class VideoComponent extends Component{
                  boo=true;
                  
  }
-        loadData();
+
         disableDialogPane();
         return boo;
     }
@@ -131,7 +131,8 @@ public class VideoComponent extends Component{
         return js;
     }
 
-    public void loadData() {
+    @Override
+    public void loadData(JsonObject jso) {
         
     }
 

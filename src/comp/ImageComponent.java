@@ -170,7 +170,7 @@ public class ImageComponent extends Component{
                  widthField.fireEvent(new ActionEvent());
                  heightField.fireEvent(new ActionEvent());
  }
-        loadData();
+
         disableDialogPane();
         return boo;
     }
@@ -198,7 +198,8 @@ public class ImageComponent extends Component{
         dialogPane.getStyleClass().remove(CSS_CLASS_DISABLED);
     }
 
-    public void loadData() {
+    @Override
+    public void loadData(JsonObject jso) {
         
     }
 

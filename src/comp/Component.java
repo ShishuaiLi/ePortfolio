@@ -30,6 +30,7 @@ public abstract class Component {
     public abstract boolean showDialog();
     public abstract Parent getDialogPane();
     public abstract JsonObject saveData();
+    public abstract void loadData(JsonObject jso);
     
     public void setPane(ComponentPane compPane){
         this.compPane=compPane;

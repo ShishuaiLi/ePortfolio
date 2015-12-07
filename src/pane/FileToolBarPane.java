@@ -131,7 +131,9 @@ public class FileToolBarPane extends HBox{
             case "VIDEO": type=type.VIDEO; break;
         }
         ComponentPane compPane=new ComponentPane(type,model);
-        
+        compPane.getComp().loadData(jso);
+        compPane.getChildren().add(compPane.getComp().getDialogPane());
+        contentPane.getChildren().add(compPane);
     }
     
     public void loadLayoutPane(JsonObject jso){

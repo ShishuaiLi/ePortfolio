@@ -120,7 +120,6 @@ public class SideBarPane extends VBox{
         if(boo){
             contentPane.getChildren().add(compPane);
             compPane.setSelectedComp(currentPage);
-            ((TextComponent)compPane.getComp()).setControls(this);
         }
     }
     

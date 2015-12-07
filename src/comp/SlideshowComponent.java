@@ -122,5 +122,10 @@ public class SlideshowComponent extends Component{
                 .build();
         return js;
     }
+   
+    @Override
+   public void loadData(JsonObject jso){
+       
+   }
     
 }
